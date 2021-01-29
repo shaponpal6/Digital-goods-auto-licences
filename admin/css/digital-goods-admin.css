@@ -1,0 +1,56 @@
+/*.dl_form th{*/
+/*    padding: 0;*/
+/*    vertical-align: top;*/
+/*}*/
+/*.dl_form td{*/
+/*    vertical-align: top !important;*/
+/*}*/
+/*.dl_add_licence, .dl_view_licence {*/
+/*    background: #ccc;*/
+/*    padding: 13px;*/
+/*    cursor: pointer;*/
+/*    font-weight: normal;*/
+/*}*/
+/*#dl_licence_container {*/
+/*    padding-left: 20px;*/
+/*}*/
+.dl_licence_class table{
+    width: 100%;
+}
+
+
+/*Tabla Table*/
+.tabla{
+    max-height: 400px;
+    overflow: auto;
+    background: #ddd;
+    margin: 30px;
+    box-shadow: 0 0 1px 3px #ddd;
+}
+thead{
+    color:white;
+    background-color: #eac098;
+}
+/*Tabla Table*/
+
+/*dl Table*/
+.dl_table {
+    border-collapse: collapse;
+}
+.dl_table th {
+    background: #ccc;
+}
+
+.dl_table th, .dl_table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+.dl_table tr:nth-child(even) {
+    background: #efefef;
+}
+
+/*.dl_table tr:hover {*/
+/*    background: #d1d1d1;*/
+/*}*/
+/*dl Table*/
