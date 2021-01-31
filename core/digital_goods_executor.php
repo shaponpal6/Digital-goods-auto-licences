@@ -48,23 +48,23 @@ class digital_goods_executor
             'dpls_order_log',
             array($this, 'dpls_order_log')
         );
-//        add_submenu_page(
-//            'dpls',
-//            __('Product Note', 'textdomain'),
-//            __('Product Note', 'textdomain'),
-//            'manage_options',
-//            'dpls_note',
-//            array($this, 'dpls_note')
-//        );
-//
-//        add_submenu_page(
-//            'dpls',
-//            __('Documentation', 'textdomain'),
-//            __('Documentation', 'textdomain'),
-//            'manage_options',
-//            'dpls_docs',
-//            array($this, 'dpls_docs')
-//        );
+    //    add_submenu_page(
+    //        'dpls',
+    //        __('Product Note', 'textdomain'),
+    //        __('Product Note', 'textdomain'),
+    //        'manage_options',
+    //        'dpls_note',
+    //        array($this, 'dpls_note')
+    //    );
+
+    //    add_submenu_page(
+    //        'dpls',
+    //        __('Documentation', 'textdomain'),
+    //        __('Documentation', 'textdomain'),
+    //        'manage_options',
+    //        'dpls_docs',
+    //        array($this, 'dpls_docs')
+    //    );
 
     }
 

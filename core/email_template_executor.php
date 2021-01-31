@@ -26,25 +26,27 @@ function dl_licence_email_meta_boxes() {
     // Regular text field
     $cmb->add_field( array(
         'name'       => __( 'Download Link', 'cmb2' ),
-        'desc'       => __( '', 'cmb2' ),
+        'desc'       => __( "Use Protocols: 'http', 'https', 'ftp', 'ftps', 'mailto', 'news', 'irc', 'gopher', 'nntp', 'feed', 'telnet'", 'cmb2' ),
         'id'         => 'sp_dl_download_link',
-        'type'       => 'textarea',
-        'show_on_cb' => 'cmb2_hide_if_no_cats',
+        'type' => 'text_url',
+        'protocols' => array( 'http', 'https', 'ftp', 'ftps', 'mailto', 'news', 'irc', 'gopher', 'nntp', 'feed', 'telnet' ),
+        // 'show_on_cb' => 'cmb2_hide_if_no_cats',
     ) );
 
     // Regular text field
     $cmb->add_field( array(
         'name'       => __( 'Add Product Note', 'cmb2' ),
-        'desc'       => __( '', 'cmb2' ),
+        'desc'       => __( 'Product Note would be added in order page', 'cmb2' ),
         'id'         => 'sp_dl_product_note',
-        'type'       => 'textarea',
+        'type'    => 'wysiwyg',
+        'options' => array(),
         'show_on_cb' => 'cmb2_hide_if_no_cats',
     ) );
 
     // Regular text field
     $cmb->add_field( array(
         'name'       => __( 'Email subject', 'cmb2' ),
-        'desc'       => __( '', 'cmb2' ),
+        'desc'       => __( 'Add Email Subject', 'cmb2' ),
         'id'         => 'sp_dl_email_subject',
         'type'       => 'text',
         'show_on_cb' => 'cmb2_hide_if_no_cats',
@@ -55,7 +57,8 @@ function dl_licence_email_meta_boxes() {
         'name'       => __( 'Email header', 'cmb2' ),
         'desc'       => __( 'Add Email header here.', 'cmb2' ),
         'id'         => 'sp_dl_email_header',
-        'type'       => 'textarea',
+        'type'    => 'wysiwyg',
+        'options' => array(),
         'show_on_cb' => 'cmb2_hide_if_no_cats', // function should return a bool value
         // 'sanitization_cb' => 'my_custom_sanitization', // custom sanitization callback parameter
         // 'escape_cb'       => 'my_custom_escaping',  // custom escaping callback parameter
@@ -68,7 +71,8 @@ function dl_licence_email_meta_boxes() {
         'name'       => __( 'Email Body Before', 'cmb2' ),
         'desc'       => __( 'This will add before message in body.', 'cmb2' ),
         'id'         => 'sp_dl_email_body_before',
-        'type'       => 'textarea',
+        'type'    => 'wysiwyg',
+        'options' => array(),
         'show_on_cb' => 'cmb2_hide_if_no_cats', // function should return a bool value
         // 'sanitization_cb' => 'my_custom_sanitization', // custom sanitization callback parameter
         // 'escape_cb'       => 'my_custom_escaping',  // custom escaping callback parameter
@@ -81,7 +85,8 @@ function dl_licence_email_meta_boxes() {
         'name'       => __( 'Email Body After', 'cmb2' ),
         'desc'       => __( 'This will add after message in body.', 'cmb2' ),
         'id'         => 'sp_dl_email_body_after',
-        'type'       => 'textarea',
+        'type'    => 'wysiwyg',
+        'options' => array(),
         'show_on_cb' => 'cmb2_hide_if_no_cats', // function should return a bool value
         // 'sanitization_cb' => 'my_custom_sanitization', // custom sanitization callback parameter
         // 'escape_cb'       => 'my_custom_escaping',  // custom escaping callback parameter

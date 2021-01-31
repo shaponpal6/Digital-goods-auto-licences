@@ -39,9 +39,13 @@ class Digital_Goods_Activator {
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql1 = "CREATE TABLE $digital_licences (
-                 `id` int(10) NOT NULL,
+                  `id` mediumint(8) unsigned NOT NULL auto_increment,
                   `product_id` int(10) NOT NULL,
+                  `type` varchar(20) NOT NULL,
                   `licence` varchar(100) NOT NULL,
+                  `login_id` varchar(100) NOT NULL,
+                  `login_password` varchar(100) NOT NULL,
+                  `download_link` text NOT NULL,
                   `sold` int(10) NOT NULL,
                   `total` int(10) NOT NULL,
                   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -49,10 +53,16 @@ class Digital_Goods_Activator {
                 ) $charset_collate;";
 
         $sql2 = "CREATE TABLE $dl_order_log (
-                 `id` int(10) NOT NULL,
+                  `id` mediumint(8) unsigned NOT NULL auto_increment,
+                  `row_id` int(10) NOT NULL,
                   `order_id` varchar(100) NOT NULL,
                   `product_id` int(10) NOT NULL,
+                  `user_id` int(10) NOT NULL,
+                  `type` varchar(20) NOT NULL,
                   `licence` varchar(100) NOT NULL,
+                  `login_id` varchar(100) NOT NULL,
+                  `login_password` varchar(100) NOT NULL,
+                  `download_link` text NOT NULL,
                   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                   PRIMARY KEY  (id)
                 ) $charset_collate;";
