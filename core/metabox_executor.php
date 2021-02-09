@@ -10,6 +10,7 @@ class metabox_executor
 
         add_action('add_meta_boxes', array($this, 'wporg_add_custom_box'));
         add_action('wp_ajax_dl_licence_admin_ajax', array($this, 'dl_licence_admin_ajax'));
+        add_action('wp_ajax_dl_licence_delete_ajax', array($this, 'dl_licence_delete_ajax'));
         add_action('wp_ajax_save_dl_type_ajax', array($this, 'save_dl_type_ajax'));
         add_action('wp_ajax_imput_csv_ajax', array($this, 'imput_csv_ajax'));
         // $this->imput_csv_ajax();
@@ -65,6 +66,7 @@ class metabox_executor
         }else{
         ?>
         <div class="dl_licence_class">
+            <div id="dlLog"></div>
             <table class="dl_form dl_table">
                 <tr></tr>
                 <tr>
@@ -83,7 +85,7 @@ class metabox_executor
                     <label class="col-md-4 control-label">Choose CSV
                                 File</label> 
                     <input type="file" name="file"
-                                id="file" accept=".csv">
+                                id="dlCSVFile" accept=".csv">
                     
                     </td>
                 </tr>
@@ -106,11 +108,13 @@ class metabox_executor
                         <input id="dl_login_password" class="sp_poll_field regular-text" type="text" value="">
                         <br/><br/>
                     <?php } else if($dl_type === 'download_link'){?>
-                        <div class="sp_poll_sp_text"><strong>Add Download Link: </strong></div>
+                    <div class="sp_poll_sp_text"><strong>Add Serial Key: </strong></div>
+                        <input id="dl_licence_key" class="sp_poll_field regular-text" type="text" value="">
+                        <div class="sp_poll_sp_text"><strong>Add Licensed Download link: </strong></div>
                         <input id="dl_download_link" class="sp_poll_field regular-text" type="text" value="">
                         <br/><br/>
                     <?php }?>
-                        <div id="dl_licence_add" data-id="<?php echo  get_the_ID();?>" class="button button-primary">Add new</div>
+                        <div id="dl_licence_add" data-id="<?php echo  get_the_ID();?>" data-row-id="" data-type="add" class="button button-primary">Add new</div>
                     </td>
                 </tr>
             </table>
@@ -123,15 +127,20 @@ class metabox_executor
                         <td>Licence Key</td>
                         <td>Sold</td>
                         <td>Total</td>
+                        <td>Action</td>
                     </tr>
                     <?php if(count($licences) > 0){
                      for ($i =0; count($licences) > $i; $i++){ ?>
-                    <tr>
+                    <tr class="dlRow">
                         <?php
                         echo '<td>'.($i+1).'</td>';
-                        echo '<td>'.$licences[$i]->licence.'</td>';
+                        echo '<td class="dlRowLicence">'.$licences[$i]->licence.'</td>';
                         echo '<td>'.$licences[$i]->sold.'</td>';
-                        echo '<td>'.$licences[$i]->total.'</td>';
+                        echo '<td class="dlRowTotal">'.$licences[$i]->total.'</td>';
+                        echo '<td>
+                            <button data-id="'.$licences[$i]->id.'" class="dlRowEdit" type="download_link">Edit</button>
+                            <button data-id="'.$licences[$i]->id.'" class="dlRowDelete" type="download_link">Delete</button>
+                        </td>';
                         ?>
                     </tr>
                 <?php }
@@ -146,15 +155,20 @@ class metabox_executor
                         <td>Login ID</td>
                         <td>Login Password</td>
                         <td>Sold</td>
+                        <td>Action</td>
                     </tr>
                     <?php if(count($licences) > 0){
                      for ($i =0; count($licences) > $i; $i++){ ?>
-                    <tr>
+                    <tr class="dlRow">
                         <?php
                         echo '<td>'.($i+1).'</td>';
-                        echo '<td>'.$licences[$i]->login_id.'</td>';
-                        echo '<td>'.$licences[$i]->login_password.'</td>';
+                        echo '<td class="dlRowLoginId">'.$licences[$i]->login_id.'</td>';
+                        echo '<td class="dlRowLoginPassword">'.$licences[$i]->login_password.'</td>';
                         echo '<td>'.$licences[$i]->sold.'</td>';
+                        echo '<td>
+                            <button data-id="'.$licences[$i]->id.'" class="dlRowEdit" type="download_link">Edit</button>
+                            <button data-id="'.$licences[$i]->id.'" class="dlRowDelete" type="download_link">Delete</button>
+                        </td>';
                         ?>
                     </tr>
                 <?php }
@@ -167,16 +181,23 @@ class metabox_executor
 
                      <tr>
                         <td>#SI</td>
-                        <td>Download Link</td>
+                        <td>Serial Key</td>
+                        <td>Licensed Download link</td>
                         <td>Sold</td>
+                        <td>Action</td>
                     </tr>
                     <?php if(count($licences) > 0){
                      for ($i =0; count($licences) > $i; $i++){ ?>
-                    <tr>
+                    <tr class="dlRow">
                         <?php
                         echo '<td>'.($i+1).'</td>';
-                        echo '<td>'.$licences[$i]->download_link.'</td>';
+                        echo '<td class="dlRowLicence">'.$licences[$i]->licence.'</td>';
+                        echo '<td class="dlRowDownloadLink">'.$licences[$i]->download_link.'</td>';
                         echo '<td>'.$licences[$i]->sold.'</td>';
+                        echo '<td>
+                            <button data-id="'.$licences[$i]->id.'" class="dlRowEdit" type="download_link">Edit</button>
+                            <button data-id="'.$licences[$i]->id.'" class="dlRowDelete" type="download_link">Delete</button>
+                        </td>';
                         ?>
                     </tr>
                     <?php }
@@ -225,7 +246,6 @@ class metabox_executor
         $response =  '' ;
         $total =  1 ;
         $count =  0 ;
-        $dd =  'ggg' ;
 
         $licence =  '' ;
         $login_id =  '' ;
@@ -234,23 +254,28 @@ class metabox_executor
 
         try{
             $data =  json_decode( str_replace('u00a0', '', str_replace('\\', '', $csv_data)), true);
-            $dd =  $data;
+            
             if($data){
-                foreach($data as $row){
+                foreach($data as $row){ 
                     $valid =  false ;
                     
-                    if($dl_type === 'licence_key' && isset($row['serial_key']) && isset($row['download_link'])){
-                        $licence =  $row['serial_key'];
-                        $download_link =  $row['download_link'] ;
+                    if($dl_type === 'licence_key' && isset($row['product_key']) && isset($row['limit'])){
+                        $licence =  $row['product_key'];
+                        $total = $row['limit'];
+                        if($licence !=='' && is_numeric($total) )
                         $valid =  true;
                     } 
                     else if($dl_type === 'login_details' && (isset($row['login_id']) && isset($row['login_password']))){
                         $login_id =  $row['login_id'];
                         $login_password = $row['login_password'];
+                         if($login_id !=='' && $login_password !=='' )
                         $valid =  true;
                     } 
                     else if($dl_type === 'download_link'){
-                        $download_link =  '' ;
+                        $licence =  $row['serial_key'];
+                        $download_link =  $row['download_link'] ;
+                        if($licence !=='' )
+                        $valid =  true;
                     } 
 
                     if($valid){
@@ -285,8 +310,9 @@ class metabox_executor
             $response =  'error: ' + $e ;
         }
 
-        $results ="{type: $dl_type, count: $count, dd:$dd, csv_data: $csv_data, status:$response}";
-        echo $results;
+        $results ="{type: $dl_type, count: $count, csv_data: $csv_data, status:$response}";
+        // echo $results;
+        echo $count;
         // print_r($results);
         // exit();
     }
@@ -322,9 +348,10 @@ class metabox_executor
         $login_password =  isset($_POST['login_password']) ? $_POST['login_password']: '' ;
         $download_link =  isset($_POST['download_link']) ? $_POST['download_link']: '' ;
 
-        $wpdb->insert(
-            $wpdb->prefix.'digital_licences',
-            array(
+        $row_id =  isset($_POST['row_id']) ? $_POST['row_id']: '' ;
+        $update_type =  isset($_POST['update_type']) ? $_POST['update_type']: '' ;
+        
+        $data = array(
                 'product_id' => $id,
                 'type' => $type,
                 'licence' => $licence,
@@ -332,7 +359,28 @@ class metabox_executor
                 'login_id' => $login_id,
                 'login_password' => $login_password,
                 'download_link' => $download_link,
-            ),
+            );
+
+        if($update_type==='update'){
+             $wpdb->update(
+            $wpdb->prefix.'digital_licences', $data,
+            array('id' => $row_id,),
+            array(
+                '%d',
+                '%s',
+                '%s',
+                '%d',
+                '%s',
+                '%s',
+                '%s',
+            ), 
+            array('%d')
+        );
+
+        }else{
+
+        $wpdb->insert(
+            $wpdb->prefix.'digital_licences', $data,
             array(
                 '%d',
                 '%s',
@@ -343,7 +391,19 @@ class metabox_executor
                 '%s',
             )
         );
+        }
         echo $wpdb->insert_id;
+    }
+
+    function dl_licence_delete_ajax(){
+        global $wpdb;
+        $row_id =  isset($_POST['row_id']) ? $_POST['row_id']: '' ;
+        $wpdb->delete(
+            $wpdb->prefix.'digital_licences',
+            array('id' => $row_id ),
+            array('%d')
+        );
+        echo $row_id;
     }
 
 }

@@ -1,24 +1,11 @@
 <?php
-
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
- *
- * @link              https://wpartificial.com/
- * @since             1.0.0
- * @package           Digital_Goods
- *
- * @wordpress-plugin
- * Plugin Name:       Digital Products Licencing System
- * Plugin URI:        https://wpartificial.com/
+ * Plugin Name:       digital-goods
+ * Plugin URI:        https://shapon.me/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Version:           2.0
  * Author:            Shapon pal
- * Author URI:        https://wpartificial.com/
+ * Author URI:        https://www.facebook.com/shaponp
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       digital-goods
@@ -30,12 +17,14 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+
+
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'DIGITAL_GOODS_VERSION', '1.0.0' );
+define( 'DIGITAL_GOODS_VERSION', '2.0' );
 
 /**
  * The code that runs during plugin activation.

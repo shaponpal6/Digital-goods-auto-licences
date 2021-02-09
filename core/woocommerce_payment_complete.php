@@ -76,15 +76,17 @@ add_action('woocommerce_thankyou', function ($order_id) {
                             $order->add_order_note('Login ID: ' . $licence_key_row[0]->login_id);
                             $order->add_order_note('Login Password: ' . $licence_key_row[0]->login_password);
                         }else if($dl_type === 'download_link'){
-                            $order->add_order_note('Download Link: ' . $licence_key_row[0]->download_link);
+                            $order->add_order_note('Licensed Download link: ' . $licence_key_row[0]->download_link);
                         }
 
-                        $order->add_order_note('Download Link: ' . $download_link);
+                        if($dl_type !== 'download_link'){
+                            $order->add_order_note('Download Link: ' . $download_link);
+                        }
                         $order->add_order_note('Product Notes: ' . get_post_meta($pid, 'sp_dl_product_note', true));
                         $order->update_status('completed');
                         dl_reduce_licence($licence_key_row[0]->id, $licence_key_row[0]->sold, $dl_type);
                         dl_licence_template($download_link, $title, $licence_key_row[0], $dl_type);
-                        dl_send_licence_email(array(
+                        $mail = array(
                             'id' => $pid,
                             'to' => $billingEmail,
                             'order' => $order_id,
@@ -92,13 +94,16 @@ add_action('woocommerce_thankyou', function ($order_id) {
                             'type' => $dl_type,
                             'licence' => $licence_key_row[0],
                             'download_link' => $download_link,
-                        ));
+                        );
+                        dl_send_licence_email($mail, true);
+                        echo dl_send_licence_email($mail, false);
+                        $order->add_order_note(dl_send_licence_email($mail, false), true);
                     }
 
                 }
             }else{
                 //TODO: Inform Admin if licence end
-                print_r('No Licence ...............................');
+                //print_r('No Licence ...............................');
             }
         }
     }
@@ -225,24 +230,27 @@ function dl_licence_template($download_link, $title, $data, $type)
     echo '<tr ><h4 class="sp_dl_title"><center><bold>' . $title . '</bold></center></h4></tr>';
     if($type === 'licence_key'){
         echo '<tr><td>Your Licence Key</td><td> <code>' . $data->licence . '</code></td></tr>';
+        echo '<tr><td>Your Download Link</td><td> <code>' . $download_link . '</code></td></tr>';
     }else if($type === 'login_details'){
          echo '<tr><td>Your Login ID</td><td> <code>' . $data->login_id . '</code></td></tr>';
          echo '<tr><td>Your Login Password</td><td> <code>' . $data->login_password . '</code></td></tr>';
+         echo '<tr><td>Your Download Link</td><td> <code>' . $download_link . '</code></td></tr>';
     }else if($type === 'download_link'){
-       echo '<tr><td>Your Download Link</td><td> <code>' . $data->download_link . '</code></td></tr>';
+        echo '<tr><td>Your Serial Key</td><td> <code>' . $data->licence . '</code></td></tr>';
+       echo '<tr><td>Your Licensed Download link</td><td> <code>' . $data->download_link . '</code></td></tr>';
     }
     
-    echo '<tr><td>Download Link</td><td><a href="'.$download_link.'">'.$download_link.'</a> </td></tr>';
+    // echo '<tr><td>Download Link</td><td><a href="'.$download_link.'">'.$download_link.'</a> </td></tr>';
     echo '</table>';
 }
 
 
-function dl_send_licence_email($mail)
+function dl_send_licence_email($mail, $send = true)
 {
     //  echo '<pre> ::::::::222:::::::';
     // print_r($mail);
     //exit();
-    $id = $mail['id'];
+    $id = $mail['id']; 
     $to = $mail['to'];
     $type = $mail['type']; // TODO: Change template by type
     $download = $mail['download_link'];
@@ -250,25 +258,36 @@ function dl_send_licence_email($mail)
     $message_before = get_post_meta($id, 'sp_dl_email_body_before', true);
     $message_after = get_post_meta($id, 'sp_dl_email_body_after', true);
     $message = '<center><h2><bold>' . $mail['title'] . '</bold></bold></h2>';
+    $headers = get_post_meta($id, 'sp_dl_email_header', true);
+    $message .= $headers;
+    $attachments = array($download);
     if($type === 'licence_key'){
         $message .= '<h4>Your Licence Key: <code>' . $mail['licence']->licence . '</code></code></h4>';
+        // $message .= '<h4>Your Download Link: <code>' . $download . '</code></code></h4>';
     }else if($type === 'login_details'){
         $message .= '<h4>Your Login ID: <code>' . $mail['licence']->login_id . '</code></code></h4>';
         $message .= '<h4>Your Login Password: <code>' . $mail['licence']->login_password . '</code></code></h4>';
+        // $message .= '<h4>Your Download Link: <code>' . $download . '</code></code></h4>';
     }else if($type === 'download_link'){
-        $message .= '<h4>Your Download Link: <code>' . $mail['licence']->download_link . '</code></code></h4>';
+        $message .= '<h4>Your Serial Key: <code>' . $mail['licence']->licence . '</code></code></h4>';
+        $message .= '<h4>Your Licensed Download link: <code>' . $mail['licence']->download_link . '</code></code></h4>';
+        $attachments = array($mail['licence']->download_link);
     }
-    
-    $message .= '<p>Download Link: <a href="' . $download . '">' . $download . '</a> </p>';
+    if($type !== 'download_link' && $download !== '')
+        $message .= '<p>Your Download Link: <a href="' . $download . '">' . $download . '</a> </p>';
     $message .= '</center>';
     // $message = '<center><h2><bold>' . $mail['title'] . '</bold></bold></h2><h4>Your Licence Key: <code>' . $mail['licence']->licence . '</code></code></h4><p>Download Link: <a href="' . $download . '">' . $download . '</a> </p></center>';
-    $headers = get_post_meta($id, 'sp_dl_email_header', true);
-    $attachments = array($download);
+    
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+    
     $body = $message_before . $message . $message_after;
 
-    //echo $body;
+    if($send){
+        return wp_mail($to, $subject, $body, $headers, $attachments);
+    }else{
+        return $body;
+    }
 
-    return wp_mail($to, $subject, $body, $headers, $attachments);
 
 }
 

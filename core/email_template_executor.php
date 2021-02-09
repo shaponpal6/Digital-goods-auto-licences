@@ -36,7 +36,7 @@ function dl_licence_email_meta_boxes() {
     // Regular text field
     $cmb->add_field( array(
         'name'       => __( 'Add Product Note', 'cmb2' ),
-        'desc'       => __( 'Product Note would be added in order page', 'cmb2' ),
+        'desc'       => __( 'Product Note would be added in order page. <br/> For line break, Click Toolbar Toggle -> use Horizontal Line(<code>-</code>). Then Click Text view. Now you can replace <code>< hr /></code> into <code>< br /></code>. Or You can use space option here.', 'cmb2' ),
         'id'         => 'sp_dl_product_note',
         'type'    => 'wysiwyg',
         'options' => array(),
