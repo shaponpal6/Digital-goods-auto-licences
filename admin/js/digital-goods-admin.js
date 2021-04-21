@@ -85,8 +85,8 @@
       const row_id = event.target.dataset.id;
       var data = {
         action: "dl_licence_delete_ajax",
-        row_id: row_id,
-        update_type: "delete",
+        row_ids: row_id,
+        action_type: "delete",
       };
       // console.log("data :>> ", data);
 
@@ -96,6 +96,82 @@
           window.location.pathname +
           window.location.search +
           window.location.hash;
+      });
+    });
+
+    // delete all data
+    // $("#dlCheckAll4Delete").on("click", function (event) {
+    //   // If the checkbox is checked, display the output text
+    //   console.log("$(this) :>> ", $(this));
+    //   var isCheck = document.querySelector("#dlCheckAll4Delete").checked;
+    //   let checkboxes = document.querySelectorAll(".dlMultiDelete");
+    //   checkboxes.forEach(function (ele) {
+    //     console.log("ele :>> ", ele);
+    //     ele.checked = !!isCheck;
+    //   });
+    // });
+
+    // Check all data
+    var checkbox = document.getElementById("dlCheckAll4Delete");
+    checkbox.addEventListener("click", function (event) {
+      let checkboxes = document.querySelectorAll(".dlMultiDelete");
+      checkboxes.forEach(function (ele) {
+        ele.checked = !!checkbox.checked;
+      });
+    });
+
+    $("#dl_delete_all").on("click", function (event) {
+      console.log("event :>> ", event);
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+
+      var checkedVals = $(".dlMultiDelete:checkbox:checked")
+        .map(function (ele) {
+          console.log("ele :>> ", ele);
+          console.log("this :>> ", this);
+          return $(this).attr("data-id");
+        })
+        .get();
+      console.log("checkedVals :>> ", checkedVals);
+      if (checkedVals.length < 1) {
+        $("#dlLog").html("No items Selected to delete.");
+        return;
+      }
+      const row_ids = checkedVals.join(",");
+      console.log(row_ids);
+
+      var data = {
+        action: "dl_licence_delete_ajax",
+        row_ids: row_ids,
+        action_type: "deleteAll",
+      };
+      // console.log("data :>> ", data);
+
+      jQuery.post(dl_licence_obj.ajax_url, data, function (response) {
+        // localStorage.setItem("response", JSON.stringify(response));
+        $("#dlLog").html("Successfully Deleted all items");
+        console.log("response :>> ", response);
+
+        const rows = document.querySelectorAll(".dlMultiDelete");
+        if (rows) {
+          rows.forEach(function (ele) {
+            // console.log("ele :>> ", ele);
+            // console.log("ele :>> ", ele.dataset.id);
+            let rowId = ele.dataset.id || 0;
+            if (checkedVals.indexOf(rowId) !== -1) {
+              console.log("ele.11111 :>> ", ele.offsetParent);
+              console.log("ele.22222 :>> ", ele.parentNode);
+              console.log("ele.3333 :>> ", ele.parentNode.parentElement);
+              ele.parentNode.parentElement.remove();
+            }
+          });
+        }
+
+        // window.location.href =
+        //   window.location.pathname +
+        //   window.location.search +
+        //   window.location.hash;
       });
     });
 

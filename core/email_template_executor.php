@@ -36,11 +36,26 @@ function dl_licence_email_meta_boxes() {
     // Regular text field
     $cmb->add_field( array(
         'name'       => __( 'Add Product Note', 'cmb2' ),
-        'desc'       => __( 'Product Note would be added in order page. <br/> For line break, Click Toolbar Toggle -> use Horizontal Line(<code>-</code>). Then Click Text view. Now you can replace <code>< hr /></code> into <code>< br /></code>. Or You can use space option here.', 'cmb2' ),
+        'desc'       => __( 'Product Note would be added in order page.<br/> For Customer name use <code>{{name}}</code> <br/> For line break, Click Toolbar Toggle -> use Horizontal Line(<code>-</code>). Then Click Text view. Now you can replace <code>< hr /></code> into <code>< br /></code>. Or You can use space option here.', 'cmb2' ),
         'id'         => 'sp_dl_product_note',
         'type'    => 'wysiwyg',
         'options' => array(),
         'show_on_cb' => 'cmb2_hide_if_no_cats',
+    ) );
+
+     // Regular text field
+    $cmb->add_field( array(
+        'name'       => __( 'Email Receiver Name', 'cmb2' ),
+        'desc'       => __( 'Add Email Receiver Name. For Customer name use <code>{{name}}</code> <br/> Example: <code>Hi {{name}}</code>', 'cmb2' ),
+        'id'         => 'sp_dl_email_receiver',
+        'type'    => 'wysiwyg',
+        // 'default_value'    => 'Hi {{name}}',
+        'options' => array(),
+        'show_on_cb' => 'cmb2_hide_if_no_cats', // function should return a bool value
+        // 'sanitization_cb' => 'my_custom_sanitization', // custom sanitization callback parameter
+        // 'escape_cb'       => 'my_custom_escaping',  // custom escaping callback parameter
+        // 'on_front'        => false, // Optionally designate a field to wp-admin only
+//         'repeatable'      => true,
     ) );
 
     // Regular text field
@@ -51,6 +66,7 @@ function dl_licence_email_meta_boxes() {
         'type'       => 'text',
         'show_on_cb' => 'cmb2_hide_if_no_cats',
     ) );
+
 
     // Regular text field
     $cmb->add_field( array(

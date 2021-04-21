@@ -82,12 +82,10 @@ class metabox_executor
                     <td><h4 class="button dl_add_licence">Add Licence</h4></td>
                     <td><h4 class="button dl_view_licence">View Licence</h4></td>
                     <td>
-                    <label class="col-md-4 control-label">Choose CSV
-                                File</label> 
-                    <input type="file" name="file"
-                                id="dlCSVFile" accept=".csv">
-                    
+                    <!-- <label class="col-md-4 control-label">Choose CSV File</label>  -->
+                    <input type="file" name="file" id="dlCSVFile" placeholder="Choose CSV file" accept=".csv">
                     </td>
+                    <td><button class="button" id="dl_delete_all">Delete All</button></td>
                 </tr>
             </table>
 
@@ -123,6 +121,7 @@ class metabox_executor
             <table id="dl_licence_view_container" class="dl_form dl_table">
                 <?php if($dl_type === 'licence_key'){?>
                     <tr>
+                        <td><input type="checkbox" aria-checked="false" id="dlCheckAll4Delete"/></td>
                         <td>#SI</td>
                         <td>Licence Key</td>
                         <td>Sold</td>
@@ -133,6 +132,7 @@ class metabox_executor
                      for ($i =0; count($licences) > $i; $i++){ ?>
                     <tr class="dlRow">
                         <?php
+                        echo '<td><input data-id="'.$licences[$i]->id.'" type="checkbox" class="dlMultiDelete"/></td>';
                         echo '<td>'.($i+1).'</td>';
                         echo '<td class="dlRowLicence">'.$licences[$i]->licence.'</td>';
                         echo '<td>'.$licences[$i]->sold.'</td>';
@@ -151,6 +151,7 @@ class metabox_executor
                 <?php } else if($dl_type === 'login_details'){?>
                     
                     <tr>
+                        <td><input type="checkbox" aria-checked="false" id="dlCheckAll4Delete"/></td>
                         <td>#SI</td>
                         <td>Login ID</td>
                         <td>Login Password</td>
@@ -161,6 +162,7 @@ class metabox_executor
                      for ($i =0; count($licences) > $i; $i++){ ?>
                     <tr class="dlRow">
                         <?php
+                        echo '<td><input data-id="'.$licences[$i]->id.'" type="checkbox" class="dlMultiDelete"/></td>';
                         echo '<td>'.($i+1).'</td>';
                         echo '<td class="dlRowLoginId">'.$licences[$i]->login_id.'</td>';
                         echo '<td class="dlRowLoginPassword">'.$licences[$i]->login_password.'</td>';
@@ -180,6 +182,7 @@ class metabox_executor
                     
 
                      <tr>
+                        <td><input type="checkbox" aria-checked="false" id="dlCheckAll4Delete"/></td>
                         <td>#SI</td>
                         <td>Serial Key</td>
                         <td>Licensed Download link</td>
@@ -190,6 +193,7 @@ class metabox_executor
                      for ($i =0; count($licences) > $i; $i++){ ?>
                     <tr class="dlRow">
                         <?php
+                        echo '<td><input data-id="'.$licences[$i]->id.'" type="checkbox" class="dlMultiDelete"/></td>';
                         echo '<td>'.($i+1).'</td>';
                         echo '<td class="dlRowLicence">'.$licences[$i]->licence.'</td>';
                         echo '<td class="dlRowDownloadLink">'.$licences[$i]->download_link.'</td>';
@@ -397,13 +401,22 @@ class metabox_executor
 
     function dl_licence_delete_ajax(){
         global $wpdb;
-        $row_id =  isset($_POST['row_id']) ? $_POST['row_id']: '' ;
-        $wpdb->delete(
-            $wpdb->prefix.'digital_licences',
-            array('id' => $row_id ),
-            array('%d')
-        );
-        echo $row_id;
+        $row_ids =  isset($_POST['row_ids']) ? $_POST['row_ids']: '' ;
+        $action_type =  isset($_POST['action_type']) ? $_POST['action_type']: '' ;
+        if($action_type === 'deleteAll'){
+            $arr =  explode(',', $row_ids);
+            $ids = implode( ',', array_map( 'absint', $arr ) );
+            $wpdb->query( "DELETE FROM `{$wpdb->prefix}digital_licences` WHERE ID IN($ids)" );
+            echo $ids;
+
+        }else{
+            $wpdb->delete(
+                $wpdb->prefix.'digital_licences',
+                array('id' => $row_ids ),
+                array('%d')
+            );
+            echo $row_ids;
+        }
     }
 
 }

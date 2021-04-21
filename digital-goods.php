@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       digital-goods
  * Plugin URI:        https://shapon.me/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Digital Goods licencing System
  * Version:           2.0
  * Author:            Shapon pal
  * Author URI:        https://www.facebook.com/shaponp
