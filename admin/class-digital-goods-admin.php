@@ -65,7 +65,8 @@ class Digital_Goods_Admin {
         /**
          * The class responsible for defining all actions that occur in the admin area.
          */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'core/digital_goods_executor.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'core/class-digital-goods-settings.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'core/class-digital-goods-menus.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'core/metabox_executor.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'metabox/init.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'core/email_template_executor.php';
