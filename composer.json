@@ -1,0 +1,16 @@
+{
+  "name": "wordpress/sp-licence",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Shapon",
+      "email": "shaponpal4@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "SPLicence\\": "src/"
+    }
+  },
+  "require": {}
+}

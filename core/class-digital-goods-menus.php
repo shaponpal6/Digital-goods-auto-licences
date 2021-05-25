@@ -19,29 +19,7 @@ class digital_goods_menus
         add_action('admin_init', array(new digital_goods_settings(), 'admin_init'));
     }
 
-   
 
-
-    function dlSetting_page()
-    {
-
-            ?>
-<div class="wrap">
-    <h1>Digital Licencing Settings Page</h1>
-    <p>Digital Licencing Settings Page</p>
-
-    <form method="post" action="options.php">
-        <?php
-                settings_fields("dl_setting_section");
-
-                do_settings_sections("dl_settings");
-
-                submit_button();
-                ?>
-    </form>
-</div>
-<?php
-    }
 
 
 
@@ -54,8 +32,8 @@ class digital_goods_menus
 
 
         add_menu_page(
-            __('Digital Licencing', 'textdomain'),
-            'Digital Licencing',
+            __('Automatic LC', 'textdomain'),
+            'Automatic LC',
             'manage_options',
             'dpls',
             array($this, 'dpls_server_page'),
@@ -70,30 +48,15 @@ class digital_goods_menus
         //     'my-setting-admin',
         //     array($this, 'create_admin_page')
         // );
-        add_submenu_page(
-            'dpls',
-            __('Order Log', 'textdomain'),
-            __('Order Log', 'textdomain'),
-            'manage_options',
-            'dpls_order_log',
-            array($this, 'dpls_order_log')
-        );
-        add_submenu_page(
-            'dpls',
-            __('Data Eraser', 'textdomain'),
-            __('Data Eraser', 'textdomain'),
-            "manage_options",
-            "dl_settings",
-            array($this, "dlSetting_page")
-        );
+     
         if($this->plugin_type ==="server"):
         add_submenu_page(
             'dpls',
-            __('Admin Settings', 'textdomain'),
-            __('Admin Settings', 'textdomain'),
+            __('LC Manager', 'textdomain'),
+            __('LC Manager', 'textdomain'),
             'manage_options',
-            'dpls_settings',
-            array($this, 'dpls_settings')
+            'dpls_lc_manager',
+            array($this, 'dpls_lc_manager')
         );
            add_submenu_page(
                'dpls',
@@ -114,8 +77,36 @@ class digital_goods_menus
            );
         endif;
 
+           add_submenu_page(
+            'dpls',
+            __('Order Log', 'textdomain'),
+            __('Order Log', 'textdomain'),
+            'manage_options',
+            'dpls_order_log',
+            array($this, 'dpls_order_log')
+        );
+        add_submenu_page(
+            'dpls',
+            __('Data Eraser', 'textdomain'),
+            __('Data Eraser', 'textdomain'),
+            "manage_options",
+            "dl_settings",
+            array($this, "dlSetting_page")
+        );
+
     }
 
+
+
+
+    /**
+     * Options page callback
+     */
+
+    function dpls_lc_manager()
+    {
+       echo 'dpls_lc_manager';
+    }
 
 
 
@@ -137,6 +128,30 @@ class digital_goods_menus
     require_once 'options/dpls_settings.php'; 
     endif;
     ?>
+</div>
+<?php
+    }
+
+
+    
+
+    function dlSetting_page()
+    {
+
+            ?>
+<div class="wrap">
+    <h1>Digital Licencing Settings Page</h1>
+    <p>Digital Licencing Settings Page</p>
+
+    <form method="post" action="options.php">
+        <?php
+                settings_fields("dl_setting_section");
+
+                do_settings_sections("dl_settings");
+
+                submit_button();
+                ?>
+    </form>
 </div>
 <?php
     }
