@@ -52,29 +52,39 @@ class digital_goods_menus
         if($this->plugin_type ==="server"):
         add_submenu_page(
             'dpls',
-            __('LC Manager', 'textdomain'),
-            __('LC Manager', 'textdomain'),
+            __('License Manager', 'textdomain'),
+            __('License Manager', 'textdomain'),
             'manage_options',
             'dpls_lc_manager',
             array($this, 'dpls_lc_manager')
         );
            add_submenu_page(
                'dpls',
-               __('Product Note', 'textdomain'),
-               __('Product Note', 'textdomain'),
+               __('License item', 'textdomain'),
+               __('License item', 'textdomain'),
                'manage_options',
                'dpls_note',
                array($this, 'dpls_note')
            );
+          
 
            add_submenu_page(
                'dpls',
-               __('Documentation', 'textdomain'),
-               __('Documentation', 'textdomain'),
+               __('Vendors', 'textdomain'),
+               __('Vendors', 'textdomain'),
                'manage_options',
                'dpls_docs',
                array($this, 'dpls_docs')
            );
+            add_submenu_page(
+               'dpls',
+               __('Template', 'textdomain'),
+               __('Template', 'textdomain'),
+               'manage_options',
+               'dpls_note',
+               array($this, 'dpls_note')
+           );
+           
         endif;
 
            add_submenu_page(
@@ -87,8 +97,8 @@ class digital_goods_menus
         );
         add_submenu_page(
             'dpls',
-            __('Data Eraser', 'textdomain'),
-            __('Data Eraser', 'textdomain'),
+            __('Settings', 'textdomain'),
+            __('Settings', 'textdomain'),
             "manage_options",
             "dl_settings",
             array($this, "dlSetting_page")
@@ -105,7 +115,9 @@ class digital_goods_menus
 
     function dpls_lc_manager()
     {
-       echo 'dpls_lc_manager';
+       $lm = new LC_manager();
+       $lm->render();
+
     }
 
 
@@ -120,7 +132,7 @@ class digital_goods_menus
         // $plugin_type = get_option('dl_plugin_type');
     ?>
 <div class="wrap">
-    <h1>Licence Server</h1>
+    <h1>Dashboard Licence Server</h1>
     <?php settings_errors(); ?>
     <!--  Show Manage option Page here-->
     <?php 

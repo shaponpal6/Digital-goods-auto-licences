@@ -70,8 +70,9 @@ class Digital_Goods_Admin {
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'core/metabox_executor.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'metabox/init.php';
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'core/email_template_executor.php';
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'core/class-lc-manager.php';
     }
-
+ 
 	/**
 	 * Register the stylesheets for the admin area.
 	 *
@@ -117,6 +118,15 @@ class Digital_Goods_Admin {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/digital-goods-admin.js', array( 'jquery' ), $this->version, false );
         wp_localize_script( $this->plugin_name, 'dl_licence_obj',
             array( 'ajax_url' => admin_url( 'admin-ajax.php' )) );
+
+			 // Enqueue Scripts
+        wp_enqueue_script(
+            'dpls_magager_scripts',
+            get_site_url() . '/wp-content/plugins/wc-auto-license/assets/build/js/license.js',
+            ['wp-element'],
+            time(),
+            true
+        );
 
 	}
 

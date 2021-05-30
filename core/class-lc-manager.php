@@ -16,6 +16,7 @@ class LC_manager
         // $this->imput_csv_ajax();
     }
 
+    
     /**
      * Define the metabox and field configurations.
      */
@@ -422,6 +423,15 @@ class LC_manager
             );
             echo $row_ids;
         }
+    }
+
+    /**
+     * Render Page
+     */
+    function render()
+    {
+        include_once plugin_dir_path( dirname( __FILE__ ) ).'admin/templates/lc-manager.php'; 
+        echo '<tr>rrrrrrrrrrrrrrrrrr<td>';
     }
 
 }
