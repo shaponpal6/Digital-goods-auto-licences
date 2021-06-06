@@ -431,6 +431,8 @@ class LC_manager
     function render()
     {
         include_once plugin_dir_path( dirname( __FILE__ ) ).'admin/templates/lc-manager.php'; 
+        // For Rest API
+        include_once plugin_dir_path( dirname( __FILE__ ) ).'admin/templates/lc-rest-crud.php'; 
         echo '<tr>rrrrrrrrrrrrrrrrrr<td>';
     }
 

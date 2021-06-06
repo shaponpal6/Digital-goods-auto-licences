@@ -128,6 +128,16 @@ class Digital_Goods_Admin {
             true
         );
 
+
+		// Rest API
+			wp_enqueue_script( 'restAPICall', plugin_dir_url( __FILE__ ) . 'js/rest.js', array( 'jquery' ), $this->version, false );
+        wp_localize_script( 'restAPICall', 'dl_rest_obj',
+            array( 
+				'site_url' => get_site_url(),
+				'nonce' => wp_create_nonce('rest_send'),
+				)
+			);
+
 	}
 
 }
